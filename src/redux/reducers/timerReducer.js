@@ -37,7 +37,7 @@ const timerReducer = (state = initialState, action) => {
       return { ...initialState, timeLeft: initialState.sessionLength * 60 };
     case TICK:
       if (state.timeLeft === 0) {
-        return { ...state, isRunning: false };
+        return { ...state, isRunning: false, timeLeft: state.timeLeft };
       }
       return { ...state, timeLeft: state.timeLeft - 1 };
     case SWITCH_MODE:
@@ -45,13 +45,15 @@ const timerReducer = (state = initialState, action) => {
         return {
           ...state,
           timerLabel: 'Break',
-          timeLeft: state.breakLength * 60
+          timeLeft: state.breakLength * 60,
+          isRunning: true,
         };
       } else {
         return {
           ...state,
           timerLabel: 'Session',
-          timeLeft: state.sessionLength * 60
+          timeLeft: state.sessionLength * 60,
+          isRunning: true,
         };
       }
     default:

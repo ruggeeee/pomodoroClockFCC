@@ -6,6 +6,7 @@ import { startTimer, stopTimer, resetTimer } from '../redux/actions';
 const Controls = () => {
   const dispatch = useDispatch();
   const isRunning = useSelector((state) => state.timer.isRunning);
+  const audioRef = document.getElementById('beep');
 
   const handleStartStop = () => {
     if (isRunning) {
@@ -17,6 +18,8 @@ const Controls = () => {
 
   const handleReset = () => {
     dispatch(resetTimer());
+    audioRef.pause();
+    audioRef.currentTime = 0;
   };
 
   return (
