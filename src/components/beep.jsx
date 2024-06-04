@@ -1,6 +1,7 @@
 // src/components/Beep.jsx
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import sounds from '../assets/sounds';
 
 const Beep = () => {
   const audioRef = useRef(null);
@@ -8,15 +9,17 @@ const Beep = () => {
 
   useEffect(() => {
     if (timeLeft === 0 && isRunning) {
-      audioRef.current.play();
+      audioRef.current.play().catch((error) => {
+        console.log("Audio playback interrupted: ", error);
+      });
     }
   }, [timeLeft, isRunning]);
 
   return (
     <audio
-      id="beep"
+      id={sounds.beep.id}
       ref={audioRef}
-      src={require('../assets/alarm-beep-audio.mp3').default}
+      src={sounds.beep.src}
       preload="auto"
     />
   );

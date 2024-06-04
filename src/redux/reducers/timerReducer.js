@@ -1,4 +1,4 @@
-// src/redux/reducers/timerReducer.js
+// reducer.js
 import {
   INCREMENT_BREAK,
   DECREMENT_BREAK,
@@ -8,54 +8,67 @@ import {
   STOP_TIMER,
   RESET_TIMER,
   TICK,
-  SWITCH_MODE
+  SWITCH_MODE,
 } from '../actions/actionTypes';
 
 const initialState = {
   breakLength: 5,
   sessionLength: 25,
-  isRunning: false,
   timeLeft: 1500, // 25 minutes in seconds
   timerLabel: 'Session',
+  isRunning: false,
 };
 
 const timerReducer = (state = initialState, action) => {
   switch (action.type) {
     case INCREMENT_BREAK:
-      return { ...state, breakLength: state.breakLength < 60 ? state.breakLength + 1 : 60 };
+      return {
+        ...state,
+        breakLength: state.breakLength < 60 ? state.breakLength + 1 : state.breakLength,
+      };
     case DECREMENT_BREAK:
-      return { ...state, breakLength: state.breakLength > 1 ? state.breakLength - 1 : 1 };
+      return {
+        ...state,
+        breakLength: state.breakLength > 1 ? state.breakLength - 1 : state.breakLength,
+      };
     case INCREMENT_SESSION:
-      return { ...state, sessionLength: state.sessionLength < 60 ? state.sessionLength + 1 : 60, timeLeft: (state.sessionLength + 1) * 60 };
+      return {
+        ...state,
+        sessionLength: state.sessionLength < 60 ? state.sessionLength + 1 : state.sessionLength,
+        timeLeft: (state.sessionLength + 1) * 60,
+      };
     case DECREMENT_SESSION:
-      return { ...state, sessionLength: state.sessionLength > 1 ? state.sessionLength - 1 : 1, timeLeft: (state.sessionLength - 1) * 60 };
+      return {
+        ...state,
+        sessionLength: state.sessionLength > 1 ? state.sessionLength - 1 : state.sessionLength,
+        timeLeft: (state.sessionLength - 1) * 60,
+      };
     case START_TIMER:
-      return { ...state, isRunning: true };
+      return {
+        ...state,
+        isRunning: true,
+      };
     case STOP_TIMER:
-      return { ...state, isRunning: false };
+      return {
+        ...state,
+        isRunning: false,
+      };
     case RESET_TIMER:
-      return { ...initialState, timeLeft: initialState.sessionLength * 60 };
+      return {
+        ...initialState,
+        timeLeft: initialState.sessionLength * 60,
+      };
     case TICK:
-      if (state.timeLeft === 0) {
-        return { ...state, isRunning: false, timeLeft: state.timeLeft };
-      }
-      return { ...state, timeLeft: state.timeLeft - 1 };
+      return {
+        ...state,
+        timeLeft: state.timeLeft - 1,
+      };
     case SWITCH_MODE:
-      if (state.timerLabel === 'Session') {
-        return {
-          ...state,
-          timerLabel: 'Break',
-          timeLeft: state.breakLength * 60,
-          isRunning: true,
-        };
-      } else {
-        return {
-          ...state,
-          timerLabel: 'Session',
-          timeLeft: state.sessionLength * 60,
-          isRunning: true,
-        };
-      }
+      return {
+        ...state,
+        timerLabel: state.timerLabel === 'Session' ? 'Break' : 'Session',
+        timeLeft: state.timerLabel === 'Session' ? state.breakLength * 60 : state.sessionLength * 60,
+      };
     default:
       return state;
   }

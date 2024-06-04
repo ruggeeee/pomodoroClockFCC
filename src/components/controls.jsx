@@ -18,8 +18,10 @@ const Controls = () => {
 
   const handleReset = () => {
     dispatch(resetTimer());
-    audioRef.pause();
-    audioRef.currentTime = 0;
+    if (audioRef) {
+      audioRef.pause();
+      audioRef.currentTime = 0;
+    }
   };
 
   return (
